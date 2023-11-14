@@ -19,22 +19,49 @@ class RouteServiceProvider extends ServiceProvider
      */
     public const HOME = '/home';
 
+    protected $apiNamespace ='App\Http\Controllers\Api';
+
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */
     public function boot(): void
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            return Limit::perMinute(300)->by($request->user()?->id ?: $request->ip());
         });
 
         $this->routes(function () {
             Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
+                ->prefix('api/' . $this->getApiVersion())
+                ->namespace($this->apiNamespace . $this->getApiNamespaceVersion())
+                ->group(base_path('routes/' . $this->getApiRouteVersion() . '.php'));
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+    }
+
+    /**
+     * @return string
+     */
+    private function getApiVersion(): string
+    {
+        return 'v' . config('app.api_version');
+    }
+
+    /**
+     * @return string
+     */
+    private function getApiNamespaceVersion(): string
+    {
+        return strtoupper($this->getApiVersion());
+    }
+
+    /**
+     * @return string
+     */
+    private function getApiRouteVersion(): string
+    {
+        return 'api_' . $this->getApiVersion();
     }
 }
