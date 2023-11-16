@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Api\ApiController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends ApiController
 {
@@ -30,8 +32,9 @@ class LoginController extends ApiController
      *     @OA\Response(response="401", description="Invalid credentials")
      * )
      */
-    public function login(Request $request): \Illuminate\Http\JsonResponse
+    public function login(Request $request): JsonResponse
     {
+        print_dd('ss');
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             $token = Auth::user()->createToken('api_token')->plainTextToken;
