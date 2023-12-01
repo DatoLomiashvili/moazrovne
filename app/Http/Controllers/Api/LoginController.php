@@ -34,7 +34,6 @@ class LoginController extends ApiController
      */
     public function login(Request $request): JsonResponse
     {
-        print_dd('ss');
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
             $token = Auth::user()->createToken('api_token')->plainTextToken;

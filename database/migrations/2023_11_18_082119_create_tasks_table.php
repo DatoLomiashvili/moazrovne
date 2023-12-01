@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->json("name");
             $table->foreignId("user_id");
+            $table->unsignedSmallInteger("sort")->index()->default(0);
+            $table->foreignId("image_id")->nullable()->constrained('media')->nullOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }

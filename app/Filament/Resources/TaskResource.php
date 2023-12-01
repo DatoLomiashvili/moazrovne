@@ -3,17 +3,15 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TaskResource\Pages;
-use App\Filament\Resources\TaskResource\RelationManagers;
 use App\Models\Task;
 use App\Models\User;
+use Awcodes\Curator\Components\Forms\CuratorPicker;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Concerns\Translatable;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TaskResource extends Resource
 {
@@ -31,6 +29,8 @@ class TaskResource extends Resource
                     ->label("User")
                     ->options(User::all()->pluck('name', 'id'))
                     ->searchable(),
+                CuratorPicker::make('image_name')->relationship('image', 'id'),
+//                Forms\Components\KeyValue::make("sort")->sortable(true)
             ]);
     }
 
@@ -40,6 +40,7 @@ class TaskResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make("name"),
                 Tables\Columns\TextColumn::make("user.name"),
+                Tables\Columns\TextColumn::make("image_name"),
             ])
 //            ->filters([
 //                //
